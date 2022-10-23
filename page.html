@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <body>
+    <div style="margin-top: 10px; text-align: center; margin-bottom: 10">
+      <h3 id="image_name"></h3>
+    </div>
+    <div style="text-align: center">
+      <img id="image" height="800" width="1000" />
+    </div>
+    <div style="text-align: center" id="selection">
+      <div style="text-align: center; margin-bottom: 15px; margin-top: 10px">
+        <input type="radio" name="imgclass" value="데이터손상" />데이터손상
+        <input type="radio" name="imgclass" value="쓰레기없음" />쓰레기없음
+        <input type="radio" name="imgclass" value="인식불가" />인식불가
+        <input type="radio" name="imgclass" value="중복사진" />중복사진
+        <input type="radio" name="imgclass" value="배율중복" />배율중복
+        <input type="radio" name="imgclass" value="초상권" />초상권
+        <input type="radio" name="imgclass" value="객체크기작음" />객체크기작음
+        <input type="radio" name="imgclass" value="객체크기큼" />객체크기큼
+        <input type="radio" name="imgclass" value="객체잘림" />객체잘림
+        <input type="radio" name="imgclass" value="기타" />기타
+      </div>
+      <div>
+        <button onclick="changeImage()">확인</button>
+      </div>
+      <div>
+        <button onclick="clearRadio()">초기화</button>
+      </div>
+    </div>
+  </body>
+  <script>
+    const image = document.getElementById("image");
+    const image_name_tag = document.getElementById("image_name");
+
+    let start// = 시작 사진 번호;
+    let last// = 마지막 사진 번호;
+
+    let data = [];
+
+    //이미지가 저장된 사진 경로
+    let image_src = "M_SC_20220904_0284-1095";
+    // 이미지의 베이스 이름
+    let image_base_name = "M_SC_20220904_";
+
+    let current_image_name = image_base_name + zeroPadding(start, 4) + ".jpg";
+    //경로 까지
+    let current_image = "./" + image_src + "/" + current_image_name;
+
+    window.onload = function () {
+      image_name_tag.innerText = current_image;
+      image.src = current_image;
+    };
+
+    function changeImage() {
+      if (start <= last) {
+        //이미지의 라벨 정보를 저장
+        writeToCSVFile();
+
+        //서버로 정보 전달
+        sendResult();
+        //새로운 이미지를 로딩
+
+        let pad_num = zeroPadding(++start, 4);
+        current_image_name = image_base_name + pad_num + ".jpg";
+
+        current_image =
+          "./" + image_src + "/" + image_base_name + pad_num + ".jpg";
+
+        image.src = current_image;
+        image_name_tag.innerText = current_image;
+      } else {
+        data.push("여기까지입니다.");
+        downloadCSVFile(data.join("\n"), "정재");
+        image.src = "./resource/lastimage.webp";
+        image_name_tag.innerText = "다운로드 폴더에서 정재.csv 확인";
+        let div = document.getElementById("selection");
+        div.parentNode.removeChild(div);
+      }
+    }
+
+    function zeroPadding(number, size) {
+      number = number.toString();
+      while (number.length < size) number = "0" + number;
+      return number;
+    }
+
+    function sendResult() {
+      //만약
+      if (getImgClass() == null) {
+        fetch(
+          "http://localhost:3005/move/" + image_src + "/" + current_image_name
+        );
+      }
+      clearRadio();
+    }
+    function getImgClass() {
+      const genderNodeList = document.getElementsByName("imgclass");
+      let value = null;
+      genderNodeList.forEach((node) => {
+        if (node.checked) {
+          value = node.value;
+        }
+      });
+      return value;
+    }
+
+    function writeToCSVFile() {
+      let class_data = getImgClass();
+      data.push(class_data);
+      console.log(class_data);
+    }
+
+    function clearRadio() {
+      const genderNodeList = document.getElementsByName("imgclass");
+
+      genderNodeList.forEach((node) => {
+        if (node.checked) {
+          node.checked = false;
+        }
+      });
+    }
+
+    /*
+        최종 결과를 CSV 형식으로 다운로드
+   */
+
+    function downloadCSVFile(csv, filename) {
+      var csv_file, download_link;
+
+      csv_file = new Blob(["\ufeff" + csv], {
+        type: "text/csv;charset=utf=8;",
+      });
+
+      download_link = document.createElement("a");
+
+      download_link.download = filename;
+
+      download_link.href = window.URL.createObjectURL(csv_file);
+
+      download_link.style.display = "none";
+
+      document.body.appendChild(download_link);
+
+      download_link.click();
+    }
+  </script>
+</html>

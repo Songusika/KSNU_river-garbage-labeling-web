@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div style="text-align: center">
+      <div>
+        <a id="image_name">M_ODC_20220826_0120.jpg</a>
+      </div>
+      <input type="radio" name="imgclass" value="데이터손상" />데이터손상
+      <input type="radio" name="imgclass" value="쓰레기없음" />쓰레기없음
+      <input type="radio" name="imgclassr" value="인식불가" />인식불가
+      <input type="radio" name="imgclass" value="중복사진" />중복사진
+      <input type="radio" name="imgclass" value="배율중복" />배율중복
+      <input type="radio" name="imgclass" value="초상권" />초상권
+      <input type="radio" name="imgclass" value="객체크기작음" />객체크기작음
+      <input type="radio" name="imgclass" value="객체크기큼" />객체크기큼
+      <input type="radio" name="imgclass" value="객체잘림" />객체잘림
+      <input type="radio" name="imgclass" value="기타" />기타
+      <div>
+        <button onclick="changeImage()">확인</button>
+      </div>
+    </body>
+  <script>
+    let data = [];
+    data.push("a");
+    data.push("b");
+    function downloadCSVFile(csv, filename) {
+      var csv_file, download_link;
+
+      csv_file = new Blob([csv], { type: "text/csv" });
+
+      download_link = document.createElement("a");
+
+      download_link.download = filename;
+
+      download_link.href = window.URL.createObjectURL(csv_file);
+
+      download_link.style.display = "none";
+
+      document.body.appendChild(download_link);
+
+      download_link.click();
+    }
+    
+   function getImgClass() {
+      const genderNodeList = document.getElementsByName("imgclass");
+
+      genderNodeList.forEach((node) => {
+        if (node.checked) {
+          return node.value;
+        } else {
+          return "";
+        }
+      });
+    }
+  </script>
+</html>
