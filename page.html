@@ -40,16 +40,19 @@
   <script>
     const image = document.getElementById("image");
     const image_name_tag = document.getElementById("image_name");
+    const serverPort = 4000;
 
-    let start// = 시작 사진 번호;
-    let last// = 마지막 사진 번호;
+    let start = 11;
+    // = 시작 사진 번호;
+    let last = 799;
+    // = 마지막 사진 번호;
 
     let data = [];
 
     //이미지가 저장된 사진 경로
-    let image_src = "M_SC_20220904_0284-1095";
+    let image_src = "M_AJC_20221014";
     // 이미지의 베이스 이름
-    let image_base_name = "M_SC_20220904_";
+    let image_base_name = "M_AJC_20221014_";
 
     let current_image_name = image_base_name + zeroPadding(start, 4) + ".jpg";
     //경로 까지
@@ -97,7 +100,12 @@
       //만약
       if (getImgClass() == null) {
         fetch(
-          "http://localhost:3005/move/" + image_src + "/" + current_image_name
+          "http://localhost:" +
+            serverPort +
+            "/move/" +
+            image_src +
+            "/" +
+            current_image_name
         );
       }
       clearRadio();

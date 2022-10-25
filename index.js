@@ -5,13 +5,13 @@ const app = express();
 const path = require("path");
 app.use(cors());
 
-const port = 3005;
+const port = 4000;
 
 let move = "_AFTER";
 
 function cpImg(srcd, image) {
-  let src = "./" + srcd + "/" + image;
-  let des = "./" + srcd + move + "/" + image;
+  let src = "images/" + srcd + "/" + image;
+  let des = "images/" + srcd + move + "/" + image;
 
   console.log(src);
   console.log(des);
@@ -34,5 +34,5 @@ app.get("/move/:src/:image", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`image preprocess localhost:${port}/page`);
+  console.log(`image preprocess http://localhost:${port}/page`);
 });
