@@ -6,7 +6,7 @@
 해당 디렉터리 이름 및 이미지 파일 베이스 이름을 page.html 에 지정
 
 Example)
-  //이미지가 저장된 사진 경로
-  let image_src = "M_BSC_20221010";
-  // 이미지의 베이스 이름
-  let image_base_name = "M_BSC_20221010_";
+//이미지가 저장된 사진 경로
+let image_src = "M_BSC_20221010";
+// 이미지의 베이스 이름
+let image_base_name = "M_BSC_20221010_";
